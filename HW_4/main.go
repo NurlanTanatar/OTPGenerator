@@ -10,7 +10,7 @@ import (
 )
 
 const (
-
+	PORT = ":80"
 	// JSONFlag is used to set a file for the questions
 	JSONFlag = "json"
 	// JSONFlagValue is the value used when no JSONFlag is provided
@@ -44,14 +44,14 @@ func main() {
 	mapHandler := createMapHandler()
 	jsonHandler := createJSONHandler(mapHandler)
 
-	fmt.Println("Starting the server on :8080")
-	http.ListenAndServe(":8080", jsonHandler)
+	fmt.Println("Starting the server on ", PORT)
+	http.ListenAndServe(PORT, jsonHandler)
 }
 
 // Build the MapHandler using the mux as the fallback
 var pathsToUrls = map[string]string{
-	"/shortner-godoc": "https://godoc.org/github.com/gophercises/shortner",
-	"/yaml-godoc":     "https://godoc.org/gopkg.in/yaml.v2",
+	"/jumys":    "https://jumysbar.kz/halykacademy",
+	"/examples": "https://gobyexample.com",
 }
 
 func createMapHandler() http.HandlerFunc {
