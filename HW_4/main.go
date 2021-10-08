@@ -24,10 +24,10 @@ func main() {
 		"/urlshort-godoc": "https://godoc.org/github.com/gophercises/urlshort",
 		"/yaml-godoc":     "https://godoc.org/gopkg.in/yaml.v2",
 	}
-	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
+	mapHandler := shortner.MapHandler(pathsToUrls, mux)
 
 	// pairProducer will be used in the MainHandler
-	var pairProducer urlshort.PairProducer
+	var pairProducer shortner.PairProducer
 	// get content from DB or from files
 	if !*useDB {
 		// get content from file
@@ -38,7 +38,7 @@ func main() {
 		}
 	} else {
 		// Open db
-		db, err := urlshort.OpenBDB("my.db", 0600)
+		db, err := shortner.OpenBDB("my.db", 0600)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -51,7 +51,7 @@ func main() {
 	}
 
 	// mainHandler will be used as in ListenAndServe
-	mainHandler, err := urlshort.MainHandler(pairProducer, mapHandler)
+	mainHandler, err := shortner.MainHandler(pairProducer, mapHandler)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func main() {
 }
 
 // getContent opens file and returns urlshort.Content
-func getContent(file string) (urlshort.Content, error) {
+func getContent(file string) (shortner.Content, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func getContent(file string) (urlshort.Content, error) {
 	if err != nil {
 		return nil, err
 	}
-	return urlshort.Content(content), nil
+	return shortner.Content(content), nil
 }
 
 func defaultMux() *http.ServeMux {
