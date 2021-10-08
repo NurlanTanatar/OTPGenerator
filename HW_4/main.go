@@ -1,24 +1,18 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
-	"./shortner"
+	"github.com/NurlanTanatar/golang_hw/tree/main/HW_4/shortner"
 )
 
-// DEFAULTFILE is the yaml file expected to be loaded by default
 const DEFAULTFILE = "map.json"
 
 func main() {
-	// Flag block
-	file := flag.String("f", DEFAULTFILE, "specify the path to json or yaml file")
-	useDB := flag.Bool("d", false, "Enable DB usage. Any provided files will be ignored")
-	flag.Parse()
 
 	mux := defaultMux()
 	// Build the MapHandler using the mux as the fallback
@@ -30,27 +24,6 @@ func main() {
 
 	// pairProducer will be used in the MainHandler
 	var pairProducer shortner.PairProducer
-	// get content from DB or from files
-	if !*useDB {
-		// get content from file
-		var err error
-		pairProducer, err = getContent(*file)
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else {
-		// Open db
-		db, err := shortner.OpenBDB("my.db", 0600)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
-		// load test data
-		if err := db.LoadInitData(); err != nil {
-			log.Fatal(err)
-		}
-		pairProducer = db
-	}
 
 	// mainHandler will be used as in ListenAndServe
 	mainHandler, err := shortner.MainHandler(pairProducer, mapHandler)
