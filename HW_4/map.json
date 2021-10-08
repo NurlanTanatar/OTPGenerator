@@ -1,10 +1,10 @@
 [
     {
-      "path": "/mobile",
-      "url" : "https://mobile-review.com/"
+      "path": "/kbtu",
+      "url" : "https://kbtu.edu.kz/"
     },
     {
-      "path": "/pikabu",
-      "url" : "https://pikabu.ru/"
+      "path": "/wsp",
+      "url" : "https://wsp.kbtu.kz/"
     }
   ]

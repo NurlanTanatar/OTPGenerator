@@ -1,7 +1,8 @@
 package shortner
 
 import (
-	"fmt"
+	"encoding/json"
+	"io"
 	"net/http"
 )
 
@@ -13,32 +14,65 @@ import (
 // http.Handler will be called instead.
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if val, ok := pathsToUrls[r.URL.String()]; ok {
-			fmt.Println("Mached: ", val)
-			http.Redirect(w, r, val, 301)
-			return
-		} else {
-			fallback.ServeHTTP(w, r)
+		path := r.URL.Path
+		if dest, ok := pathsToUrls[path]; ok {
+			http.Redirect(w, r, dest, http.StatusFound)
+		}
+
+		fallback.ServeHTTP(w, r)
+	}
+}
+
+// JSONHandler will parse the provided JSON and then return
+// an http.HandlerFunc that will attempt to map any paths to their
+// corresponding URL. If the path is not provided in the JSON, then the
+// fallback http.Handler will be called instead.
+//
+// JSON is expected to be in the format:
+// [
+//    {
+//      "path": "/some-path",
+//      "url": "https://www.some-url.com/demo"
+//    }
+// ]
+func JSONHandler(r io.Reader, fallback http.Handler) (http.HandlerFunc, error) {
+	decoder := json.NewDecoder(r)
+	pathURLs, err := decode(decoder)
+	if err != nil {
+		return nil, err
+	}
+	pathToUrls := buildMap(pathURLs)
+
+	mapHandler := MapHandler(pathToUrls, fallback)
+	return mapHandler, nil
+}
+
+type pathURL struct {
+	Path string `json:"path"`
+	URL  string `json:"url"`
+}
+
+type decoder interface {
+	Decode(v interface{}) error
+}
+
+func decode(d decoder) ([]pathURL, error) {
+	var pu []pathURL
+	for {
+		err := d.Decode(&pu)
+		if err == io.EOF {
+			return pu, nil
+		} else if err != nil {
+			return nil, err
 		}
 	}
 }
 
-// MainHandler works with PairProducer interface to get pairs, convert
-// them to map and invokes MapHandler with this map
-func MainHandler(pp PairProducer, fallback http.Handler) (http.HandlerFunc, error) {
-	pairs, err := pp.Pair()
-	if err != nil {
-		return nil, err
+func buildMap(pathURLs []pathURL) map[string]string {
+	pathToUrls := make(map[string]string)
+	for _, pu := range pathURLs {
+		pathToUrls[pu.Path] = pu.URL
 	}
-	pathMap := buildMap(pairs)
-	return MapHandler(pathMap, fallback), nil
-}
 
-// buildMap will convert []PathMap to map[string]string
-func buildMap(pairs []Pair) map[string]string {
-	resultMap := make(map[string]string)
-	for _, p := range pairs {
-		resultMap[p.Path] = p.Url
-	}
-	return resultMap
+	return pathToUrls
 }
