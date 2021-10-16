@@ -11,7 +11,7 @@ func worker(id int, wg *sync.WaitGroup, jobs <-chan int, results chan<- int, err
 	for j := range jobs {
 		fmt.Printf("worker #%d: init-d job №%d\n", id, j)
 		time.Sleep(time.Second * time.Duration(rand.Intn(2)))
-		fmt.Printf("Worker #%d: fin-d job = %v\n", id, j)
+		fmt.Printf("Worker #%d: fin-d job №%v\n", id, j)
 		results <- j
 		wg.Done()
 	}
