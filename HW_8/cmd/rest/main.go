@@ -1,10 +1,10 @@
 package main
 
 import (
+	"HW_8/internal/http"
+	"HW_8/internal/store/inmemory"
 	"context"
 	"log"
-	"midProject/internal/http"
-	"midProject/internal/store/inmemory"
 )
 
 func main() {

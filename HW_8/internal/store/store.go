@@ -1,8 +1,8 @@
 package store
 
 import (
+	"HW_8/internal/models"
 	"context"
-	"midProject/internal/models"
 )
 
 type Store interface {
