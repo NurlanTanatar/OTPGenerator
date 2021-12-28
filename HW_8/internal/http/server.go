@@ -3,6 +3,7 @@ package http
 import (
 	"HW_9/internal/models"
 	"HW_9/internal/store"
+	"HW_9/internal/store/cache"
 	"HW_9/tools"
 	"context"
 	"encoding/base64"
@@ -23,17 +24,26 @@ type Server struct {
 	ctx         context.Context
 	idleConnsCh chan struct{}
 	store       store.Store
-
-	Address string
+	cacheUser   cache.UserCache
+	address     string
 }
 
+type ServerAdds func(server *Server)
+
 func NewServer(ctx context.Context, address string, store store.Store) *Server {
-	return &Server{
+	server := &Server{
 		ctx:         ctx,
 		idleConnsCh: make(chan struct{}),
 		store:       store,
+		address:     address,
+		cacheUser:   cache.NewUserCache("localhost:6379", 0, 30),
+	}
+	return server
+}
 
-		Address: address,
+func WithCache(cacheUser cache.UserCache) ServerAdds {
+	return func(server *Server) {
+		server.cacheUser = cacheUser
 	}
 }
 
@@ -71,6 +81,7 @@ func (s *Server) basicHandler() chi.Router {
 		user, err := s.store.ByID(r.Context(), idStr)
 		if err != nil {
 			fmt.Fprintf(w, "Unknown err: %v", err)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 
@@ -102,6 +113,12 @@ func (s *Server) basicHandler() chi.Router {
 	r.Get("/users/{id}", func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
 
+		userFromCache := s.cacheUser.Get(r.Context(), idStr)
+		if userFromCache != nil {
+			render.JSON(w, r, userFromCache)
+			return
+		}
+
 		user, err := s.store.ByID(r.Context(), idStr)
 		if err != nil {
 			fmt.Fprintf(w, "Unknown err: %v", err)
@@ -109,6 +126,7 @@ func (s *Server) basicHandler() chi.Router {
 			return
 		}
 
+		s.cacheUser.Set(r.Context(), idStr, user)
 		render.JSON(w, r, user)
 	})
 
@@ -163,14 +181,14 @@ func (s *Server) basicHandler() chi.Router {
 
 func (s *Server) Run() error {
 	srv := &http.Server{
-		Addr:         s.Address,
+		Addr:         s.address,
 		Handler:      s.basicHandler(),
 		ReadTimeout:  time.Second * 5,
 		WriteTimeout: time.Second * 30,
 	}
 	go s.ListenCtxForGT(srv)
 
-	log.Println("[HTTP] Server running on", s.Address)
+	log.Println("[HTTP] Server running on", s.address)
 	return srv.ListenAndServe()
 }
 

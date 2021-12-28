@@ -37,13 +37,6 @@ func Init() store.Store {
 	}
 }
 
-// func NewDB() store.Store {
-// 	return &DB{
-// 		collection: make(map[int]*models.User),
-// 		mu:         new(sync.RWMutex),
-// 	}
-// }
-
 func (db *DB) Create(ctx context.Context, user *models.User) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
