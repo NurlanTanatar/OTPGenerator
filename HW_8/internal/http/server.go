@@ -28,8 +28,6 @@ type Server struct {
 	address     string
 }
 
-type ServerAdds func(server *Server)
-
 func NewServer(ctx context.Context, address string, store store.Store) *Server {
 	server := &Server{
 		ctx:         ctx,
@@ -39,12 +37,6 @@ func NewServer(ctx context.Context, address string, store store.Store) *Server {
 		cacheUser:   cache.NewUserCache("localhost:6379", 0, 30),
 	}
 	return server
-}
-
-func WithCache(cacheUser cache.UserCache) ServerAdds {
-	return func(server *Server) {
-		server.cacheUser = cacheUser
-	}
 }
 
 func (s *Server) basicHandler() chi.Router {
