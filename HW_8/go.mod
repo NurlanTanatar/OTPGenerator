@@ -1,4 +1,4 @@
-module HW_9
+module HW_8
 
 go 1.16
 

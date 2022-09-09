@@ -1,7 +1,7 @@
 package tools
 
 import (
-	"HW_9/internal/models"
+	"HW_8/internal/models"
 	"encoding/base32"
 	"fmt"
 	"io/ioutil"
