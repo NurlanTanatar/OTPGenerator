@@ -2,7 +2,7 @@ package main
 
 import (
 	"HW_8/internal/http"
-	"HW_8/internal/store/inmemory"
+	inmemory "HW_8/internal/store/mongg"
 	"context"
 	"log"
 )
