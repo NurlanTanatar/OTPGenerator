@@ -1,8 +1,8 @@
 package main
 
 import (
-	"HW_8/internal/http"
-	"HW_8/internal/store/inmemory"
+	"HW_9/internal/http"
+	"HW_9/internal/store/inmemory"
 	"context"
 	"log"
 )
