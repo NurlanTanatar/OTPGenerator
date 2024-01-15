@@ -1,8 +1,8 @@
 package inmemory
 
 import (
-	"QRCodeGenerator/internal/models"
-	"QRCodeGenerator/internal/store"
+	"OTPGenerator/internal/models"
+	"OTPGenerator/internal/store"
 	"context"
 	"errors"
 	"fmt"

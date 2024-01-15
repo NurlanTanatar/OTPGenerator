@@ -1,7 +1,7 @@
 package tools
 
 import (
-	"QRCodeGenerator/internal/models"
+	"OTPGenerator/internal/models"
 	"encoding/base32"
 	"fmt"
 	"io/ioutil"

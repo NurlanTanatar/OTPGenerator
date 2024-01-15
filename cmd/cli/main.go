@@ -1,7 +1,7 @@
 package main
 
 import (
-	"QRCodeGenerator/tools"
+	"OTPGenerator/tools"
 	"encoding/base64"
 	"flag"
 	"fmt"

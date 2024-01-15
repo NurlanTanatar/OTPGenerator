@@ -1,7 +1,7 @@
 package store
 
 import (
-	"QRCodeGenerator/internal/models"
+	"OTPGenerator/internal/models"
 	"context"
 )
 

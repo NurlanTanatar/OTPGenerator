@@ -1,8 +1,8 @@
 package main
 
 import (
-	"QRCodeGenerator/internal/http"
-	"QRCodeGenerator/internal/store/inmemory"
+	"OTPGenerator/internal/http"
+	"OTPGenerator/internal/store/inmemory"
 	"context"
 	"log"
 )

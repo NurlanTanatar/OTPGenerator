@@ -1,9 +1,9 @@
 package http
 
 import (
-	"QRCodeGenerator/internal/models"
-	"QRCodeGenerator/internal/store"
-	"QRCodeGenerator/tools"
+	"OTPGenerator/internal/models"
+	"OTPGenerator/internal/store"
+	"OTPGenerator/tools"
 	"context"
 	"encoding/base64"
 	"encoding/json"

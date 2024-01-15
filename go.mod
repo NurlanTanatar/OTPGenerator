@@ -1,4 +1,4 @@
-module QRCodeGenerator
+module OTPGenerator
 
 go 1.19
 
