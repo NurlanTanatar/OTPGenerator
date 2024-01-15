@@ -1,7 +1,7 @@
 package main
 
 import (
-	"HW_8/tools"
+	"QRCodeGenerator/tools"
 	"encoding/base64"
 	"flag"
 	"fmt"

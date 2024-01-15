@@ -1,7 +1,7 @@
 package store
 
 import (
-	"HW_9/internal/models"
+	"QRCodeGenerator/internal/models"
 	"context"
 )
 

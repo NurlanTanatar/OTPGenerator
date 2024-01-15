@@ -1,4 +1,4 @@
-module HW_9
+module QRCodeGenerator
 
 go 1.19
 

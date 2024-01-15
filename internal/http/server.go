@@ -1,9 +1,9 @@
 package http
 
 import (
-	"HW_9/internal/models"
-	"HW_9/internal/store"
-	"HW_9/tools"
+	"QRCodeGenerator/internal/models"
+	"QRCodeGenerator/internal/store"
+	"QRCodeGenerator/tools"
 	"context"
 	"encoding/base64"
 	"encoding/json"

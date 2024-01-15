@@ -1,7 +1,7 @@
 package tools
 
 import (
-	"HW_9/internal/models"
+	"QRCodeGenerator/internal/models"
 	"encoding/base32"
 	"fmt"
 	"io/ioutil"
